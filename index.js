@@ -5,6 +5,8 @@
  */
 
 var net = require('net');
+var config = require('./config');
+var serverConfig = config.servers[0];
 var lang = require('./lang');
 var parser = require('./parser');
 var validator = require('./common/validator');
@@ -67,7 +69,7 @@ tcpServer.on('connection', function(socket_cli) {
     
     console.log(lang.index.data_accept + remoteAddress+ ':'+ remotePort + ' : ' + data);
     var dataParseredArrArr = parser.parse(data + '');
-    if(!dataParseredArrArr || dataParseredArr.length == 0){
+    if(!dataParseredArrArr){
       return;
     }
     var len = dataParseredArr.length;
@@ -125,3 +127,7 @@ tcpServer.on('connection', function(socket_cli) {
     console.log(lang.index.conn_timeout_destory);
   });
 });
+
+tcpServer.listen(serverConfig.port, serverConfig.host, function() {
+  console.log('%s Server %s listen on %s:%s', serverConfig.protocol, serverConfig.alias, serverConfig.host, serverConfig.port);
+})
